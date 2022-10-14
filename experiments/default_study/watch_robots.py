@@ -28,8 +28,8 @@ class Simulator:
 
     async def simulate(self) -> None:
 
-        self.study = 'default_study'
-        self.experiments_name = ['defaultexperiment']
+        self.study = 'default_study'                         #TODO: absolute filepath
+        self.experiments_name = ['defaultexperiment']             #TODO: absolute filepath
         self.runs = list(range(1, 10+1))
         self.generations = [100]
         self.bests = 1
@@ -38,7 +38,7 @@ class Simulator:
         # 'gens' selects best from chosen generations
         # 'specific' selects the robot provided in specific_robot
         self.bests_type = 'gens'
-        mainpath = "karine"
+        mainpath = "honours2021"                                     #TODO: absolute filepath
 
         for experiment_name in self.experiments_name:
             print('\n', experiment_name)

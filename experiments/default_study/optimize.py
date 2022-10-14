@@ -16,7 +16,7 @@ async def main() -> None:
 
     args = Config()._get_params()
 
-    mainpath = "karine"
+    mainpath = "honours2021"                 #TODO: absolute filepath
 
     logging.basicConfig(
         level=logging.INFO,

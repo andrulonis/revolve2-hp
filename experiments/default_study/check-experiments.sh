@@ -3,11 +3,11 @@
 #set -x
 
 
-study="default_study"
+study="default_study"                            #TODO: absolute filepath
 # arrays delimiter is space
-experiments=("defaultexperiment")
+experiments=("defaultexperiment")                #TODO: absolute filepath
 runs=10
-mainpath="karine"
+mainpath="honours2021"              #TODO: absolute filepath
 
 # discover unfinished experiments
 

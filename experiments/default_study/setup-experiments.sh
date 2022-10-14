@@ -3,20 +3,20 @@
 #set -x
 
 
-study="default_study"
+study="default_study"                                        #TODO: absolute filepath
 
 # DO NOT use underline ( _ ) in the experiments names
 # delimiter is space, example:
 #experiments=("exp1" "epx2")
 # exps order is the same for all params
 
-experiments=("defaultexperiment")
+experiments=("defaultexperiment")                        #TODO: absolute filepath
 seasons_conditions=("1.0_1.0_0")
 runs=10
 num_generations="100"
 
 num_terminals=2
-mainpath="/storage/karine"
+mainpath="/storage/honours2021"                  #TODO: absolute filepath
 
 mkdir ${mainpath}/${study}/analysis
 

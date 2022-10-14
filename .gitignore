@@ -1,5 +1,8 @@
 data/
 
+# isaacgym
+isaacgym/
+
 # Visual Studio Code
 .vscode/
 
