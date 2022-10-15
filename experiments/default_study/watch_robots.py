@@ -30,8 +30,8 @@ class Simulator:
 
         self.study = 'default_study'                         #TODO: absolute filepath
         self.experiments_name = ['defaultexperiment']             #TODO: absolute filepath
-        self.runs = list(range(1, 10+1))
-        self.generations = [100]
+        self.runs = list(range(1, 10+1))                        #TODO: change to the correct number
+        self.generations = [100]                                #TODO: change to the correct number
         self.bests = 1
         self.specific_robot = 2
         # 'all' selects best from all individuals

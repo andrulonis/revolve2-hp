@@ -8,9 +8,9 @@ experiments=("defaultexperiment")                        #TODO: absolute filepat
 
 # these params are the same for all exps
 # gens for boxplots and snapshots
-generations=(100)
+generations=(1)
 #gen for lineplots
-final_gen=100
+final_gen=1
 runs=1                               #TODO; was 10
 mainpath="honours2021"               #TODO: absolute filepath
 study="default_study"                        #TODO: absolute filepath
