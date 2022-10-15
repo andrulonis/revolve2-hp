@@ -37,7 +37,7 @@ clrs = ['#009900',
         '#EE8610',
         '#7550ff',
         '#876044']
-path = f'/storage/{mainpath}/{study}'
+path = f'/home/{mainpath}/{study}'
 
 measures = {
     'pop_diversity': ['Diversity', 0, 1],
