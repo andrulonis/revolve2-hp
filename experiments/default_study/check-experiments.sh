@@ -20,7 +20,7 @@ do
     do
 
      printf  "\n${experiment}_${run} \n"
-     file="/storage/${mainpath}/${study}/${experiment}_${run}.log";
+     file="/home/${mainpath}/${study}/${experiment}_${run}.log";
 
      #check experiments status
      if [[ -f "$file" ]]; then

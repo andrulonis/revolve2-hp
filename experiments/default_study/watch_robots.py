@@ -45,7 +45,7 @@ class Simulator:
             for run in self.runs:
                 print('\n run: ', run)
 
-                path = f'/storage/{mainpath}/{self.study}'
+                path = f'/home/{mainpath}/{self.study}'
 
                 db = open_async_database_sqlite(f'{path}/{experiment_name}/run_{run}')
 

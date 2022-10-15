@@ -36,7 +36,7 @@ class Analysis:
         self.runs = runs
         self.final_gen = int(args.final_gen)
 
-        self.path = f'/storage/{mainpath}/{study}'
+        self.path = f'/home/{mainpath}/{study}'
 
         self.measures = {
             'pop_diversity': ['Diversity', 0, 1],

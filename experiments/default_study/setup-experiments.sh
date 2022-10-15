@@ -16,7 +16,7 @@ runs=10
 num_generations="100"
 
 num_terminals=2
-mainpath="/storage/honours2021"                  #TODO: absolute filepath
+mainpath="/home/honours2021"                  #TODO: absolute filepath
 
 mkdir ${mainpath}/${study}/analysis
 

@@ -74,7 +74,7 @@ env_conditions = {}
 
 async def main() -> None:
 
-    db = open_async_database_sqlite(f'/storage/{mainpath}/{study}/{experiments[0]}/run_{runs[0]}')
+    db = open_async_database_sqlite(f'/home/{mainpath}/{study}/{experiments[0]}/run_{runs[0]}')
     async with AsyncSession(db) as session:
         rows = ((await session.execute(select(DbEnvconditions).order_by(DbEnvconditions.id))).all())
         for c_row in rows:

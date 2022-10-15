@@ -37,7 +37,7 @@ async def main() -> None:
     rng.seed(random())
 
     # database
-    database = open_async_database_sqlite(f'/storage/{mainpath}/{args.study_name}/{args.experiment_name}/run_{args.run}')
+    database = open_async_database_sqlite(f'/home/{mainpath}/{args.study_name}/{args.experiment_name}/run_{args.run}')
 
     # process id generator
     process_id_gen = ProcessIdGen()
@@ -48,7 +48,7 @@ async def main() -> None:
 
     process_id = process_id_gen.gen()
 
-    maybe_optimizer = await Optimizer.from_database(
+    maybe_optimizer = await Optimizer.from_database(        #These values can be change in <revolve>/core/revolve2/core/config.py
         database=database,
         process_id=process_id,
         innov_db_body=innov_db_body,

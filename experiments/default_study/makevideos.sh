@@ -1,7 +1,7 @@
 #TODO: maybe update watch_robots.py???
 
 study="default_study"
-mainpath="/storage/honours2021"
+mainpath="/home/honours2021"
 file="${mainpath}/${study}/analysis/video_bests.mpg";
 
 printf " \n making video..."
