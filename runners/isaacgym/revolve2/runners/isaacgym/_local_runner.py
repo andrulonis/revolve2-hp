@@ -9,6 +9,7 @@ import colored
 import numpy as np
 from isaacgym import gymapi
 from pyrr import Quaternion, Vector3
+from isaacgym.terrain_utils import * # TODO: import of terrains
 
 from revolve2.core.physics.actor import Actor
 from revolve2.core.physics.actor.urdf import to_urdf as physbot_to_urdf
@@ -85,21 +86,39 @@ class LocalRunner(Runner):
             # TODO this is only temporary. When we switch to the new isaac sim it should be easily possible to
             # let the user create static object, rendering the group plane redundant.
             # But for now we keep it because it's easy for our first test release.
-            plane_params = gymapi.PlaneParams()
-            static_friction, dynamic_friction, y_rotation_degrees = self._env_conditions
-            y_rotation_degrees = float(y_rotation_degrees)
-            static_friction = float(static_friction)
-            dynamic_friction = float(dynamic_friction)
-            # adds (possible) rotation to the y-axis
-            # ps: because camera is also rotated, we see the hill raising from the center to the right of the screen
-            plane_params.normal = gymapi.Vec3(0.0,
-                                              -np.sin(y_rotation_degrees*np.pi/180),
-                                              np.cos(y_rotation_degrees*np.pi/180))
-            plane_params.distance = 0
-            plane_params.static_friction = static_friction
-            plane_params.dynamic_friction = dynamic_friction
-            plane_params.restitution = 0
-            self._gym.add_ground(self._sim, plane_params)
+            
+            # plane_params = gymapi.PlaneParams()
+            # static_friction, dynamic_friction, y_rotation_degrees = self._env_conditions
+            # y_rotation_degrees = float(y_rotation_degrees)
+            # static_friction = float(static_friction)
+            # dynamic_friction = float(dynamic_friction)
+            # # adds (possible) rotation to the y-axis
+            # # ps: because camera is also rotated, we see the hill raising from the center to the right of the screen
+            # plane_params.normal = gymapi.Vec3(0.0,
+            #                                   -np.sin(y_rotation_degrees*np.pi/180),
+            #                                   np.cos(y_rotation_degrees*np.pi/180))
+            # plane_params.distance = 0
+            # plane_params.static_friction = static_friction
+            # plane_params.dynamic_friction = dynamic_friction
+            # plane_params.restitution = 0
+            # self._gym.add_ground(self._sim, plane_params)
+
+            # TODO: creating custom terrains, even waves as an example, uncomment the above code and comment the code below until self._gym... to get flat plane
+            horizontal_scale = 0.0125  # [m] 0.25 0.0125
+            vertical_scale = 0.00025  # [m] 0.005 0.00025
+            heightfield = wave_terrain(SubTerrain(width=1000, length=1000, vertical_scale=vertical_scale, horizontal_scale=horizontal_scale), num_waves=50., amplitude=0.04).height_field_raw
+            #heightfield = pyramid_stairs_terrain(SubTerrain(width=512, length=512, vertical_scale=vertical_scale, horizontal_scale=horizontal_scale), step_width=10., step_height=-0.3, platform_size=1.).height_field_raw
+            vertices, triangles = convert_heightfield_to_trimesh(heightfield, horizontal_scale=horizontal_scale, vertical_scale=vertical_scale, slope_threshold=1.5)
+            tm_params = gymapi.TriangleMeshParams()
+            tm_params.nb_vertices = vertices.shape[0]
+            tm_params.nb_triangles = triangles.shape[0]
+            #TODO: offsets of the terrain, tweaked to fit the centre perfectly with the robot
+            tm_params.static_friction = 1.0
+            tm_params.dynamic_friction = 1.0
+            tm_params.transform.p.x = -3.25
+            tm_params.transform.p.y = -3.25
+            tm_params.transform.p.z = -0.125
+            self._gym.add_triangle_mesh(self._sim, vertices.flatten(), triangles.flatten(), tm_params)
 
             num_per_row = int(math.sqrt(len(self._batch.environments)))
 
