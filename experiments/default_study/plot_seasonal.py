@@ -20,6 +20,7 @@ parser.add_argument("generations")
 parser.add_argument("mainpath")
 args = parser.parse_args()
 
+###TODO??? are these arguments absolute idk
 study = args.study
 experiments_name = args.experiments.split(',')
 runs = list(range(1, int(args.runs) + 1))

@@ -9,12 +9,13 @@ import sys
 async def main(parser) -> None:
 
     args = parser.parse_args()
-
+    mainpath = args.mainpath
     study = args.study
     experiments_name = args.experiments.split(',')
+
     runs = list(range(1, int(args.runs)+1))
     generations = list(map(int, args.generations.split(',')))
-    mainpath = args.mainpath
+
 
     bests = 5
     path_out = f'/home/{mainpath}/{study}/analysis/snapshots'

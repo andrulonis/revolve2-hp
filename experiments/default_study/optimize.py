@@ -15,8 +15,7 @@ from revolve2.core.config import Config
 async def main() -> None:
 
     args = Config()._get_params()
-
-    mainpath = "honours2021"                 #TODO: absolute filepath
+    mainpath = args.mainpath
 
     logging.basicConfig(
         level=logging.INFO,

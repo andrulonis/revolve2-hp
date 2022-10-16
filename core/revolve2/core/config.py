@@ -3,6 +3,7 @@ import argparse
 
 class Config():
 
+
     def _get_params(self):
         parser = argparse.ArgumentParser()
 
@@ -11,21 +12,21 @@ class Config():
         parser.add_argument(
             "--population_size",
             required=False,
-            default=100,
+            default=20,
             type=int,
         )
 
         parser.add_argument(
             "--offspring_size",
             required=False,
-            default=100,
+            default=20,
             type=int,
         )
 
         parser.add_argument(
             "--num_generations",
             required=False,
-            default=200,            ##was 200
+            default=20,            ##was 200
             type=int,
         )
 
@@ -116,11 +117,27 @@ class Config():
         )
 
         parser.add_argument(
+            "--mainpath",
+            required=False,
+            default="honours2021",
+            type=str,
+            help="directory in /home to output files",
+        )
+
+        parser.add_argument(
+            "--total_runs",
+            required=False,
+            default=3,      ##TODO: use 30 for HP experiment
+            type=int,
+            help="total number of runs"
+        )
+
+        parser.add_argument(
             "--run",
             required=False,
             default=1,
             type=int,
-            help="",
+            help="which run to run right now",
         )
 
         parser.add_argument(
@@ -136,6 +153,13 @@ class Config():
             default=5,
             type=int,
         )  # number of samples per sec from batch (snapshots of sim)
+
+        parser.add_argument(
+            "--get_default",
+            required=False,
+            default="run",
+            type=str,
+        )
 
         parser.add_argument(
             "--run_simulation",

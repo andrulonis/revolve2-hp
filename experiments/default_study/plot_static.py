@@ -6,6 +6,7 @@ from statannot import add_stat_annotation
 import pprint
 import sys
 
+###TODO??? are these arguments absolute idk
 parser = argparse.ArgumentParser()
 parser.add_argument("study")
 parser.add_argument("experiments")

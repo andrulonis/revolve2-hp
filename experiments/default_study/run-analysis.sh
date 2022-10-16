@@ -4,18 +4,26 @@
 #experiments="exp1,epx2"
 # exps order is the same for all params
 
-experiments=("defaultexperiment")                        #TODO: absolute filepath
+experiments="$(python3 experiments/default_study/get_param.py --get_default experiment_name)"
 
 # these params are the same for all exps
 # gens for boxplots and snapshots
-generations=(1)
+generations="$(python3 experiments/default_study/get_param.py --get_default num_generations)"
 #gen for lineplots
-final_gen=1
-runs=1                               #TODO; was 10
-mainpath="honours2021"               #TODO: absolute filepath
-study="default_study"                        #TODO: absolute filepath
+final_gen="$(python3 experiments/default_study/get_param.py --get_default num_generations)"
+runs="$(python3 experiments/default_study/get_param.py --get_default total_runs)"
+mainpath="$(python3 experiments/default_study/get_param.py --get_default mainpath)"
+study="$(python3 experiments/default_study/get_param.py --get_default study_name)"
 
+echo "[generating best snapshots...]"
 python experiments/${study}/snapshots_bests.py $study $experiments $runs $generations $mainpath;
+
+echo "[generating best 2D snapshots...]"
 python experiments/${study}/bests_snap_2d.py $study $experiments $runs $generations $mainpath;
+
+echo "[running consolidate.py...]"
 python experiments/${study}/consolidate.py $study $experiments $runs $final_gen $mainpath;
+
+echo "[plotting static plots...]"
 python experiments/${study}/plot_static.py $study $experiments $runs $generations $mainpath;
+echo "[DONE ANALYSING!]"

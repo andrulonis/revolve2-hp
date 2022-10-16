@@ -21,27 +21,31 @@ import pprint
 import numpy as np
 from ast import literal_eval
 from revolve2.runners.isaacgym import LocalRunner
-
+from revolve2.core.config import Config
 
 class Simulator:
     _controller: ActorController
 
     async def simulate(self) -> None:
-
-        self.study = 'default_study'                         #TODO: absolute filepath
-        self.experiments_name = ['defaultexperiment']             #TODO: absolute filepath
-        self.runs = list(range(1, 10+1))                        #TODO: change to the correct number
-        self.generations = [100]                                #TODO: change to the correct number
+        args = Config()._get_params()
+        self.study = args.study_name
+        self.experiments_name = [args.experiment_name]
+        nRuns = args.total_runs
+        self.runs = list(range(1, nRuns+1))
+        print("gonna do runs: ")
+        print(self.runs)
+        self.generations = [args.num_generations]
         self.bests = 1
         self.specific_robot = 2
         # 'all' selects best from all individuals
         # 'gens' selects best from chosen generations
         # 'specific' selects the robot provided in specific_robot
         self.bests_type = 'gens'
-        mainpath = "honours2021"                                     #TODO: absolute filepath
+        mainpath = args.mainpath
 
         for experiment_name in self.experiments_name:
-            print('\n', experiment_name)
+            print('\nstudy name ', self.study)
+            print('\nexperiment name ', experiment_name)
             for run in self.runs:
                 print('\n run: ', run)
 

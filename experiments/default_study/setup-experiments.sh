@@ -2,23 +2,25 @@
 #set -e
 #set -x
 
+###[HP] run this if you want to run the experiment in the foreground
 
-study="default_study"                                        #TODO: absolute filepath
+study="$(python3 experiments/default_study/get_param.py --get_default study_name)"
 
 # DO NOT use underline ( _ ) in the experiments names
 # delimiter is space, example:
 #experiments=("exp1" "epx2")
 # exps order is the same for all params
 
-experiments=("defaultexperiment")                        #TODO: absolute filepath
-seasons_conditions=("1.0_1.0_0")
-runs=10
-num_generations="100"
+experiments="$(python3 experiments/default_study/get_param.py --get_default experiment_name)"
+seasons_conditions="$(python3 experiments/default_study/get_param.py --get_default seasons_conditions)"
+runs="$(python3 experiments/default_study/get_param.py --get_default total_runs)"
+num_generations="$(python3 experiments/default_study/get_param.py --get_default num_generations)"
+mainpath="$(python3 experiments/default_study/get_param.py --get_default mainpath)"
 
 num_terminals=2
-mainpath="/home/honours2021"                  #TODO: absolute filepath
 
-mkdir ${mainpath}/${study}/analysis
+
+mkdir /home/${mainpath}/${study}/analysis
 
 possible_screens=()
 
@@ -72,7 +74,7 @@ while true
         do
 
          printf  "\n${experiment}_${run} \n"
-         file="${mainpath}/${study}/${experiment}_${run}.log";
+         file="/home/${mainpath}/${study}/${experiment}_${run}.log";
 
          #check experiments status
          if [[ -f "$file" ]]; then
@@ -115,7 +117,7 @@ while true
         idx=$( echo ${experiments[@]/${exp}//} | cut -d/ -f1 | wc -w | tr -d ' ' )
 
         # nice -n19 python3  experiments/${study}/optimize.py
-        screen -d -m -S screen_${free_screens[$p]}_${to_d} -L -Logfile /home/honours2021/${study}/${exp}_${run}".log" python3  experiments/${study}/optimize.py \
+        screen -d -m -S screen_${free_screens[$p]}_${to_d} -L -Logfile /home/${mainpath}/${study}/${exp}_${run}".log" python3  experiments/${study}/optimize.py \
                --experiment_name ${exp} --seasons_conditions ${seasons_conditions[$idx]} --run ${run} --study=${study} --num_generations ${num_generations};
 
         printf "\n >> (re)starting screen_${free_screens[$p]}_${to_d} \n\n"
@@ -125,7 +127,7 @@ while true
 
    # if all experiments are finished, makes video
    if [ -z "$unfinished" ]; then
-       file="${mainpath}/${study}/analysis/video_bests.mpg";
+       file="home/${mainpath}/${study}/analysis/video_bests.mpg";
 
      if [ -f "$file" ]; then
         printf ""
@@ -139,7 +141,7 @@ while true
     fi
 
 
-    sleep 1800;
+    sleep 180;
 
 done
 

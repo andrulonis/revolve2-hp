@@ -2,12 +2,11 @@
 #set -e
 #set -x
 
-
-study="default_study"                            #TODO: absolute filepath
+study=$(python3 experiments/default_study/get_param.py --get_default study_name)"
 # arrays delimiter is space
-experiments=("defaultexperiment")                #TODO: absolute filepath
-runs=10
-mainpath="honours2021"              #TODO: absolute filepath
+experiments="$(python3 experiments/default_study/get_param.py --get_default experiment_name)"
+runs=$(python3 experiments/default_study/get_param.py --get_default total_runs)"
+mainpath=$(python3 experiments/default_study/get_param.py --get_default mainpath)"
 
 # discover unfinished experiments
 
