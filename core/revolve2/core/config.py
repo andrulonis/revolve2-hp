@@ -10,9 +10,9 @@ class Config():
         # EA params
 
         parser.add_argument(
-            "--population_size",
+            "--population_size",    #HP parameter is 100
             required=False,
-            default=20,
+            default=100,
             type=int,
         )
 
@@ -26,7 +26,7 @@ class Config():
         parser.add_argument(
             "--num_generations",
             required=False,
-            default=20,            ##was 200
+            default=200,            #HP parameter is 200
             type=int,
         )
 
@@ -127,7 +127,7 @@ class Config():
         parser.add_argument(
             "--total_runs",
             required=False,
-            default=3,      ##TODO: use 30 for HP experiment
+            default=30,      ##use 30 for HP experiment
             type=int,
             help="total number of runs"
         )

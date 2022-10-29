@@ -20,4 +20,5 @@ Then run analysis from root with:
 
 Results in /home/honours2021
 
-The video function does not work, but is supposed to be run with: ./experiments/default_study/makevideos.sh
+The video function works now too: ./experiments/default_study/makevideos.sh
+    Do note that it only works with 1 monitor. 
