@@ -4,7 +4,34 @@ import argparse
 class Config():
 
 
+
+
     def _get_params(self):
+        # defaults listed for easier use
+        default_population_size             = 100                   # HP parameter 100
+        default_offspring_size              = 100                    # HP parameter 100
+        default_num_generations             = 200                     # HP parameter 200
+        default_max_modules                 = 30
+        default_substrate_radius            = 15
+        default_plastic_body                = 0
+        default_plastic_brain               = 0
+        default_body_substrate_dimensions   = '2d'
+        default_num_initial_mutations       = 10
+        default_crossover_prob              = 0
+        default_mutation_prob               = 1
+        default_fitness_measure             = "speed_y"
+        default_study_name                  = "default_study"       # HP parameter default_study
+        default_experiment_name             = "defaultexperiment"
+        default_mainpath                    = "honours2021"         # HP parameter is "honours2021"
+        default_total_runs                  = 30                     # HP parameter is 30
+        default_run                         = 1
+        default_simulation_time             = 30
+        default_sampling_frequency          = 5
+        default_get_default                 = "run"
+        default_run_simulation              = 1
+        default_control_frequency           = 20
+        default_seasons_conditions          = '1.0_1.0_0'
+
         parser = argparse.ArgumentParser()
 
         # EA params
@@ -12,28 +39,28 @@ class Config():
         parser.add_argument(
             "--population_size",    #HP parameter is 100
             required=False,
-            default=100,
+            default=default_population_size,
             type=int,
         )
 
         parser.add_argument(
             "--offspring_size",
             required=False,
-            default=20,
+            default=default_offspring_size,
             type=int,
         )
 
         parser.add_argument(
             "--num_generations",
             required=False,
-            default=200,            #HP parameter is 200
+            default=default_num_generations,            #HP parameter is 200
             type=int,
         )
 
         parser.add_argument(
             "--max_modules",
             required=False,
-            default=30,
+            default=default_max_modules,
             type=int,
             help="",
         )
@@ -41,7 +68,7 @@ class Config():
         parser.add_argument(
             "--substrate_radius",
             required=False,
-            default=15,
+            default=default_substrate_radius,
             type=int,
             help="",
         )
@@ -49,7 +76,7 @@ class Config():
         parser.add_argument(
             "--plastic_body",
             required=False,
-            default=0,
+            default=default_plastic_body,
             type=int,
             help="0 is not plastic, 1 is plastic",
         )
@@ -57,7 +84,7 @@ class Config():
         parser.add_argument(
             "--plastic_brain",
             required=False,
-            default=0,
+            default=default_plastic_brain,
             type=int,
             help="0 is not plastic, 1 is plastic",
         )
@@ -65,7 +92,7 @@ class Config():
         parser.add_argument(
             "--body_substrate_dimensions",
             required=False,
-            default='2d',
+            default=default_body_substrate_dimensions,
             type=str,
             help="2d or 3d",
         )
@@ -73,28 +100,28 @@ class Config():
         parser.add_argument(
             "--num_initial_mutations",
             required=False,
-            default=10,
+            default=default_num_initial_mutations,
             type=int,
         )  # number of initial mutations for body and brain CPPNWIN networks
 
         parser.add_argument(
             "--crossover_prob",
             required=False,
-            default=0,
+            default=default_crossover_prob,
             type=float,
         )
 
         parser.add_argument(
             "--mutation_prob",
             required=False,
-            default=1,
+            default=default_mutation_prob,
             type=float,
         )
 
         parser.add_argument(
             "--fitness_measure",
             required=False,
-            default="speed_y",
+            default=default_fitness_measure,
             type=str,
         )
 
@@ -103,7 +130,7 @@ class Config():
         parser.add_argument(
             "--study_name",
             required=False,
-            default="default_study",
+            default=default_study_name,
             type=str,
             help="",
         )
@@ -111,7 +138,7 @@ class Config():
         parser.add_argument(
             "--experiment_name",
             required=False,
-            default="defaultexperiment",
+            default=default_experiment_name,
             type=str,
             help="Name of the experiment.",
         )
@@ -119,7 +146,7 @@ class Config():
         parser.add_argument(
             "--mainpath",
             required=False,
-            default="honours2021",
+            default=default_mainpath,
             type=str,
             help="directory in /home to output files",
         )
@@ -127,7 +154,7 @@ class Config():
         parser.add_argument(
             "--total_runs",
             required=False,
-            default=30,      ##use 30 for HP experiment
+            default=default_total_runs,
             type=int,
             help="total number of runs"
         )
@@ -135,7 +162,7 @@ class Config():
         parser.add_argument(
             "--run",
             required=False,
-            default=1,
+            default=default_run,
             type=int,
             help="which run to run right now",
         )
@@ -143,28 +170,28 @@ class Config():
         parser.add_argument(
             "--simulation_time",
             required=False,
-            default=30,
+            default=default_simulation_time,
             type=int,
         )
 
         parser.add_argument(
             "--sampling_frequency",
             required=False,
-            default=5,
+            default=default_sampling_frequency,
             type=int,
         )  # number of samples per sec from batch (snapshots of sim)
 
-        parser.add_argument(
+        parser.add_argument(        #HP, added this one to make the arguments available in bash
             "--get_default",
             required=False,
-            default="run",
+            default=default_get_default,
             type=str,
         )
 
         parser.add_argument(
             "--run_simulation",
             required=False,
-            default=1,
+            default=default_run_simulation,
             type=int,
             help="If 0, runs optimizer without simulating robots, so behavioral measures are none."
         )
@@ -172,14 +199,14 @@ class Config():
         parser.add_argument(
             "--control_frequency",
             required=False,
-            default=20,
+            default=default_control_frequency,
             type=int,
         )
 
         parser.add_argument(
             "--seasons_conditions",
             required=False,
-            default='1.0_1.0_0',
+            default=default_seasons_conditions,
             type=str,
             # seasons separated by '#' and their params separated by '_': params order matters!
             help="staticfriction_dynamicfriction_yrotationdegrees|"

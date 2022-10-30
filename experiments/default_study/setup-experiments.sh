@@ -17,7 +17,7 @@ runs="$(python3 experiments/default_study/get_param.py --get_default total_runs)
 num_generations="$(python3 experiments/default_study/get_param.py --get_default num_generations)"
 mainpath="$(python3 experiments/default_study/get_param.py --get_default mainpath)"
 
-num_terminals=2
+num_terminals=5
 
 
 mkdir /home/${mainpath}/${study}/analysis
@@ -125,7 +125,7 @@ while true
 
     done
 
-   # if all experiments are finished, makes video
+    #remnants of video function, now it just kills process
    if [ -z "$unfinished" ]; then
        file="home/${mainpath}/${study}/analysis/video_bests.mpg";
 
@@ -133,8 +133,8 @@ while true
         printf ""
      else
          printf " \n making video..."
-         screen -d -m -S videos ffmpeg -f x11grab -r 25 -i :1 -qscale 0 $file;
-         python3 experiments/${study}/watch_robots.py;
+         #screen -d -m -S videos ffmpeg -f x11grab -r 25 -i "$DISPLAY" -qscale 0 $file;
+         #python3 experiments/${study}/watch_robots.py;
          killall screen;
          printf " \n finished video!"
       fi
@@ -144,6 +144,14 @@ while true
     sleep 180;
 
 done
+
+# run from revolve root
+# screen -ls  | egrep "^\s*[0-9]+.screen_" | awk -F "." '{print $1}' |  xargs kill
+# killall screen
+# screen -r naaameee
+# screen -list
+
+
 
 # run from revolve root
 # screen -ls  | egrep "^\s*[0-9]+.screen_" | awk -F "." '{print $1}' |  xargs kill

@@ -12,8 +12,7 @@ rm $file
 printf " \n making video...\n"
 screen -d -m -S HP_videos ffmpeg -video_size "${WIDTH}"x"${HEIGHT}" -f x11grab -r 25 -i "$DISPLAY" -qscale 0 $file
 printf "starting python visualization scripts\n"
-#python3 experiments/${study}/watch_robots.py
-sleep 5
+python3 experiments/${study}/watch_robots.py
 killall screen
 printf "\n finished video!"
 

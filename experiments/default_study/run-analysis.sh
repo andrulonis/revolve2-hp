@@ -26,4 +26,8 @@ python experiments/${study}/consolidate.py $study $experiments $runs $final_gen 
 
 echo "[plotting static plots...]"
 python experiments/${study}/plot_static.py $study $experiments $runs $generations $mainpath;
+
+echo "[making video recording...]"
+./experiments/${study}/makevideos.sh
+
 echo "[DONE ANALYSING!]"
