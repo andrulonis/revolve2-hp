@@ -5,6 +5,8 @@ https://drive.google.com/drive/folders/1m9UoMw5NXw_ffm4H3-VKz1efJiWw-3zn?usp=sha
 
 Set configuration of experiment in by changing the default parameter values: <revolve>/core/revolve2/config.py
 
+Change terrain at /home/honours2021/revolve2-hp/runners/isaacgym/revolve2/runners/isaacgym/_local_runner.py
+
 Make directory "honours2021" in home. set chmod to 775. Make yourself owner with chown. Use:
 ```
 sudo mkdir /home/honours2021 

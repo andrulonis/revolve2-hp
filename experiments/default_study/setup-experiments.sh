@@ -11,6 +11,7 @@ study="$(python3 experiments/default_study/get_param.py --get_default study_name
 #experiments=("exp1" "epx2")
 # exps order is the same for all params
 
+RESTART_ABORTED_EXPERIMENT=true
 experiments="$(python3 experiments/default_study/get_param.py --get_default experiment_name)"
 seasons_conditions="$(python3 experiments/default_study/get_param.py --get_default seasons_conditions)"
 runs="$(python3 experiments/default_study/get_param.py --get_default total_runs)"
@@ -20,7 +21,7 @@ mainpath="$(python3 experiments/default_study/get_param.py --get_default mainpat
 num_terminals=5
 
 
-mkdir /home/${mainpath}/${study}/analysis
+mkdir -p /home/${mainpath}/${study}/analysis
 
 possible_screens=()
 
@@ -83,12 +84,17 @@ while true
               echo "latest finished gen ${lastgen}";
 
              if [ "$lastgen" -lt "$num_generations" ]; then
-                 unfinished+=("${experiment}_${run}")
+                unfinished+=("${experiment}_${run}")
 
-                # only if not already running
+                # [HP] REMOVES ABORTED EXPERIMENTS
                 if [[ ! " ${active_experiments[@]} " =~ " ${experiment}_${run} " ]]; then
-                   to_do+=("${experiment}_${run}")
+                  rm $file
+                  rm -rf "/home/${mainpath}/${study}/${experiment}/run_${run}"
                 fi
+                # only if not already running. [HP] DISABLED CONTINUEING EXPERIMENT
+                # if [[ ! " ${active_experiments[@]} " =~ " ${experiment}_${run} " ]]; then
+                #    to_do+=("${experiment}_${run}")
+                # fi
              fi
          else
              # not started yet
@@ -135,13 +141,17 @@ while true
          printf " \n making video..."
          #screen -d -m -S videos ffmpeg -f x11grab -r 25 -i "$DISPLAY" -qscale 0 $file;
          #python3 experiments/${study}/watch_robots.py;
-         killall screen;
+         exit
          printf " \n finished video!"
       fi
     fi
 
-
-    sleep 180;
+    printf "restarting loop in 180 seconds...\n"
+    sleep 20;
+    printf "restarting loop in 120 seconds...\n"
+    sleep 20;
+    printf "restarting loop in  60 seconds...\n"
+    sleep 20;
 
 done
 
