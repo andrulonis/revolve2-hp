@@ -1,7 +1,9 @@
 import argparse
 import pandas
 import matplotlib.pyplot as plt
+import matplotlib.tri as tri
 import seaborn as sb
+import numpy as np
 from statannot import add_stat_annotation
 import pprint
 import sys
@@ -69,10 +71,11 @@ def plots():
 
     df_inner = pandas.read_csv(f'{path}/analysis/df_inner.csv')
     df_outer = pandas.read_csv(f'{path}/analysis/df_outer.csv')
+    df_all = pandas.read_csv(f'{path}/analysis/all_df.csv')
 
     plot_lines(df_outer)
     plot_boxes(df_inner)
-
+    contour_plots(df_all)
 
 def plot_lines(df_outer):
 
@@ -123,6 +126,36 @@ def plot_lines(df_outer):
 
     print('plotted lines!')
 
+
+def contour_plots(df_all):
+    run_df = df_all
+    gen = max(run_df["generation_index"])
+    gen_df = run_df[run_df["generation_index"]==gen]
+    
+    x_labels, y_labels = ["hinge_prop", "extremities_prop"], ["coverage", "coverage"]
+    for x_label, y_label in zip(x_labels, y_labels):
+        x, y, z = gen_df[x_label], gen_df[y_label], gen_df["speed_y"]
+        plt.hist(x)
+        plt.hist(y)
+        plt.show()
+        xi = np.linspace(min(x), max(x), 200)
+        yi = np.linspace(min(y), max(y), 200)
+
+        # Linearly interpolate the data (x, y) on a grid defined by (xi, yi).
+        triang = tri.Triangulation(x, y)
+        interpolator = tri.LinearTriInterpolator(triang, z)
+        Xi, Yi = np.meshgrid(xi, yi)
+        zi = interpolator(Xi, Yi)
+        
+        plt.contour(xi, yi, zi, levels=15, linewidths=0.5)
+        plt.contourf(xi, yi, zi, levels=15)#, cmap="RdBu_r")
+        plt.colorbar()
+        #plt.scatter(x, y)
+        plt.xlabel(x_label)
+        plt.ylabel(y_label)
+        plt.savefig(f'{path}/analysis/basic_plots/contour_{x_label}_{y_label}.png', bbox_inches='tight')
+        plt.clf()
+        plt.close()
 
 def plot_boxes(df_inner):
     print('plotting boxes...')
