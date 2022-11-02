@@ -22,7 +22,7 @@ class Config():
         default_fitness_measure             = "speed_y"
         default_study_name                  = "default_study"       # HP parameter default_study
         default_experiment_name             = "defaultexperiment"
-        default_mainpath                    = "/home/honours2021"         # HP parameter is "honours2021"
+        default_mainpath                    = "~"         # HP parameter is "honours2021"
         default_output_path                 = "/storage/honours2021"
         default_total_runs                  = 30                     # HP parameter is 30
         default_run                         = 1
