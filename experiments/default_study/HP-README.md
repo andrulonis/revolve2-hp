@@ -7,10 +7,10 @@ Set configuration of experiment in by changing the default parameter values: <re
 
 Change terrain at /home/honours2021/revolve2-hp/runners/isaacgym/revolve2/runners/isaacgym/_local_runner.py
 
-Make directory "honours2021" in home. set chmod to 775. Make yourself owner with chown. Use:
+Make directory "honours2021" in home or in storage, this will be the output location. The ripper already has this output folder. set chmod to 777. Make yourself owner with chown. Use:
 ```
 sudo mkdir /home/honours2021 
-sudo chmod 775 /home/honours2021
+sudo chmod 777 /home/honours2021
 sudo chown <your user> /home/honours2021
 ``` 
 

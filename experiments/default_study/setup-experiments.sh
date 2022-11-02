@@ -17,11 +17,12 @@ seasons_conditions="$(python3 experiments/default_study/get_param.py --get_defau
 runs="$(python3 experiments/default_study/get_param.py --get_default total_runs)"
 num_generations="$(python3 experiments/default_study/get_param.py --get_default num_generations)"
 mainpath="$(python3 experiments/default_study/get_param.py --get_default mainpath)"
+output_path="$(python3 experiments/default_study/get_param.py --get_default output_path)"
 
 num_terminals=5
 
 
-mkdir -p /home/${mainpath}/${study}/analysis
+mkdir -p ${output_path}/${study}/analysis
 
 possible_screens=()
 
@@ -75,7 +76,8 @@ while true
         do
 
          printf  "\n${experiment}_${run} \n"
-         file="/home/${mainpath}/${study}/${experiment}_${run}.log";
+         file="${output_path}/${study}/${experiment}_${run}.log";
+
 
          #check experiments status
          if [[ -f "$file" ]]; then
@@ -89,7 +91,7 @@ while true
                 # [HP] REMOVES ABORTED EXPERIMENTS
                 if [[ ! " ${active_experiments[@]} " =~ " ${experiment}_${run} " ]]; then
                   rm $file
-                  rm -rf "/home/${mainpath}/${study}/${experiment}/run_${run}"
+                  rm -rf "${output_path}/${study}/${experiment}/run_${run}"
                 fi
                 # only if not already running. [HP] DISABLED CONTINUEING EXPERIMENT
                 # if [[ ! " ${active_experiments[@]} " =~ " ${experiment}_${run} " ]]; then
@@ -123,7 +125,7 @@ while true
         idx=$( echo ${experiments[@]/${exp}//} | cut -d/ -f1 | wc -w | tr -d ' ' )
 
         # nice -n19 python3  experiments/${study}/optimize.py
-        screen -d -m -S screen_${free_screens[$p]}_${to_d} -L -Logfile /home/${mainpath}/${study}/${exp}_${run}".log" python3  experiments/${study}/optimize.py \
+        screen -d -m -S screen_${free_screens[$p]}_${to_d} -L -Logfile ${output_path}/${study}/${exp}_${run}".log" python3  experiments/${study}/optimize.py \
                --experiment_name ${exp} --seasons_conditions ${seasons_conditions[$idx]} --run ${run} --study=${study} --num_generations ${num_generations};
 
         printf "\n >> (re)starting screen_${free_screens[$p]}_${to_d} \n\n"
@@ -131,19 +133,9 @@ while true
 
     done
 
-    #remnants of video function, now it just kills process
    if [ -z "$unfinished" ]; then
-       file="home/${mainpath}/${study}/analysis/video_bests.mpg";
-
-     if [ -f "$file" ]; then
-        printf ""
-     else
-         printf " \n making video..."
-         #screen -d -m -S videos ffmpeg -f x11grab -r 25 -i "$DISPLAY" -qscale 0 $file;
-         #python3 experiments/${study}/watch_robots.py;
-         exit
-         printf " \n finished video!"
-      fi
+       printf "DONE. EXITING LOOP\n"
+        exit
     fi
 
     printf "restarting loop in 180 seconds...\n"

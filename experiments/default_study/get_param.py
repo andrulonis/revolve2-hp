@@ -18,6 +18,8 @@ elif (flag=="fitness_measure"):
    print(args.fitness_measure)
 elif (flag=="mainpath"):
    print(args.mainpath)
+elif (flag=="output_path"):
+   print(args.output_path)
 elif (flag=="max_modules"):
    print(args.max_modules)
 elif (flag=="mutation_prob"):

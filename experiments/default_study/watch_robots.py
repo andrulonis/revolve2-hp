@@ -42,6 +42,7 @@ class Simulator:
         # 'specific' selects the robot provided in specific_robot
         self.bests_type = 'gens'
         mainpath = args.mainpath
+        output_path = args.output_path
 
         for experiment_name in self.experiments_name:
             print('\nstudy name ', self.study)
@@ -49,7 +50,7 @@ class Simulator:
             for run in self.runs:
                 print('\n run: ', run)
 
-                path = f'/home/{mainpath}/{self.study}'
+                path = f'{output_path}/{self.study}'
 
                 db = open_async_database_sqlite(f'{path}/{experiment_name}/run_{run}')
 

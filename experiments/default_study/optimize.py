@@ -3,6 +3,7 @@ import logging
 from random import Random, random
 import sys
 import multineat
+import time
 
 from genotype import random as random_genotype
 from optimizer import Optimizer
@@ -16,6 +17,7 @@ async def main() -> None:
 
     args = Config()._get_params()
     mainpath = args.mainpath
+    output_path = args.output_path
 
     logging.basicConfig(
         level=logging.INFO,
@@ -36,7 +38,7 @@ async def main() -> None:
     rng.seed(random())
 
     # database
-    database = open_async_database_sqlite(f'/home/{mainpath}/{args.study_name}/{args.experiment_name}/run_{args.run}')
+    database = open_async_database_sqlite(f'{output_path}/{args.study_name}/{args.experiment_name}/run_{args.run}')
 
     # process id generator
     process_id_gen = ProcessIdGen()

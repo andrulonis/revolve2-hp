@@ -9,7 +9,7 @@ import sys
 async def main(parser) -> None:
 
     args = parser.parse_args()
-    mainpath = args.mainpath
+    output_path = args.output_path
     study = args.study
     experiments_name = args.experiments.split(',')
 
@@ -18,7 +18,7 @@ async def main(parser) -> None:
 
 
     bests = 5
-    path_out = f'/home/{mainpath}/{study}/analysis/snapshots'
+    path_out = f'{output_path}/{study}/analysis/snapshots'
 
     for gen in generations:
         # TODO: change black background to white
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     parser.add_argument("experiments")
     parser.add_argument("runs")
     parser.add_argument("generations")
-    parser.add_argument("mainpath")
+    parser.add_argument("output_path")
     asyncio.run(main(parser))
 
 # can be run from root

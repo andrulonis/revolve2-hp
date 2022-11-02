@@ -22,8 +22,9 @@ class Config():
         default_fitness_measure             = "speed_y"
         default_study_name                  = "default_study"       # HP parameter default_study
         default_experiment_name             = "defaultexperiment"
-        default_mainpath                    = "honours2021"         # HP parameter is "honours2021"
-        default_total_runs                  = 15                     # HP parameter is 30
+        default_mainpath                    = "/home/honours2021"         # HP parameter is "honours2021"
+        default_output_path                 = "/storage/honours2021"
+        default_total_runs                  = 1                     # HP parameter is 30
         default_run                         = 1
         default_simulation_time             = 30
         default_sampling_frequency          = 5
@@ -147,6 +148,14 @@ class Config():
             "--mainpath",
             required=False,
             default=default_mainpath,
+            type=str,
+            help="directory in /home to run from",
+        )
+
+        parser.add_argument(
+            "--output_path",
+            required=False,
+            default=default_output_path,
             type=str,
             help="directory in /home to output files",
         )

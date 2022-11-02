@@ -28,7 +28,7 @@ class Analysis:
         study = args.study
         experiments_name = args.experiments.split(',')
         runs = list(range(1, int(args.runs) + 1))
-        mainpath = args.mainpath
+        output_path = args.output_path
 
         self.study = study
         self.experiments = experiments_name
@@ -36,7 +36,7 @@ class Analysis:
         self.runs = runs
         self.final_gen = int(args.final_gen)
 
-        self.path = f'/home/{mainpath}/{study}'
+        self.path = f'{output_path}/{study}'
 
         self.measures = {
             'pop_diversity': ['Diversity', 0, 1],
@@ -170,7 +170,7 @@ parser.add_argument("study")
 parser.add_argument("experiments")
 parser.add_argument("runs")
 parser.add_argument("final_gen")
-parser.add_argument("mainpath")
+parser.add_argument("output_path")
 args = parser.parse_args()
 
 # TODO: break by environment

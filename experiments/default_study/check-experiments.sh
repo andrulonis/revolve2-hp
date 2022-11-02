@@ -7,6 +7,7 @@ study=$(python3 experiments/default_study/get_param.py --get_default study_name)
 experiments="$(python3 experiments/default_study/get_param.py --get_default experiment_name)"
 runs=$(python3 experiments/default_study/get_param.py --get_default total_runs)"
 mainpath=$(python3 experiments/default_study/get_param.py --get_default mainpath)"
+output_path=$(python3 experiments/default_study/get_param.py --get_default output_path)"
 
 # discover unfinished experiments
 
@@ -19,7 +20,7 @@ do
     do
 
      printf  "\n${experiment}_${run} \n"
-     file="/home/${mainpath}/${study}/${experiment}_${run}.log";
+     file="${output_path}/${study}/${experiment}_${run}.log";
 
      #check experiments status
      if [[ -f "$file" ]]; then

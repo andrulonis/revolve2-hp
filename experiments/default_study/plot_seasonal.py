@@ -17,7 +17,7 @@ parser.add_argument("study")
 parser.add_argument("experiments")
 parser.add_argument("runs")
 parser.add_argument("generations")
-parser.add_argument("mainpath")
+parser.add_argument("output_path")
 args = parser.parse_args()
 
 ###TODO??? are these arguments absolute idk
@@ -25,7 +25,7 @@ study = args.study
 experiments_name = args.experiments.split(',')
 runs = list(range(1, int(args.runs) + 1))
 generations = list(map(int, args.generations.split(',')))
-mainpath = args.mainpath
+output_path = args.output_path
 
 study = study
 experiments = experiments_name
@@ -38,7 +38,7 @@ clrs = ['#009900',
         '#EE8610',
         '#7550ff',
         '#876044']
-path = f'/home/{mainpath}/{study}'
+path = f'{output_path}/{study}'
 
 measures = {
     'pop_diversity': ['Diversity', 0, 1],
@@ -75,7 +75,7 @@ env_conditions = {}
 
 async def main() -> None:
 
-    db = open_async_database_sqlite(f'/home/{mainpath}/{study}/{experiments[0]}/run_{runs[0]}')
+    db = open_async_database_sqlite(f'{path}/{experiments[0]}/run_{runs[0]}')
     async with AsyncSession(db) as session:
         rows = ((await session.execute(select(DbEnvconditions).order_by(DbEnvconditions.id))).all())
         for c_row in rows:
