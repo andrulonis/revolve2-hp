@@ -8,9 +8,9 @@ class Config():
 
     def _get_params(self):
         # defaults listed for easier use
-        default_population_size             = 20                   # HP parameter 100
-        default_offspring_size              = 20                    # HP parameter 100
-        default_num_generations             = 1                     # HP parameter 200
+        default_population_size             = 100                   # HP parameter 100
+        default_offspring_size              = 100                    # HP parameter 100
+        default_num_generations             = 200                     # HP parameter 200
         default_max_modules                 = 30
         default_substrate_radius            = 15
         default_plastic_body                = 0
@@ -24,7 +24,7 @@ class Config():
         default_experiment_name             = "defaultexperiment"
         default_mainpath                    = "/home/honours2021"         # HP parameter is "honours2021"
         default_output_path                 = "/storage/honours2021"
-        default_total_runs                  = 1                     # HP parameter is 30
+        default_total_runs                  = 30                     # HP parameter is 30
         default_run                         = 1
         default_simulation_time             = 30
         default_sampling_frequency          = 5
