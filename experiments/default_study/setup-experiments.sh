@@ -75,7 +75,7 @@ while true
         for experiment in "${experiments[@]}"
         do
 
-         printf  "\n${experiment}_${run} \n"
+         printf  "${experiment}_${run} \t"
          file="${output_path}/${study}/${experiment}_${run}.log";
 
 
@@ -92,6 +92,7 @@ while true
                 if [[ ! " ${active_experiments[@]} " =~ " ${experiment}_${run} " ]]; then
                   rm $file
                   rm -rf "${output_path}/${study}/${experiment}/run_${run}"
+                  echo "Removed aborted exp ${file}"
                 fi
                 # only if not already running. [HP] DISABLED CONTINUEING EXPERIMENT
                 # if [[ ! " ${active_experiments[@]} " =~ " ${experiment}_${run} " ]]; then
