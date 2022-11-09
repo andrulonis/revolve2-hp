@@ -21,7 +21,7 @@ class Config():
         default_mutation_prob               = 1
         default_fitness_measure             = "speed_y"
         default_study_name                  = "default_study"       # HP parameter default_study
-        default_experiment_name             = "defaultexperiment"
+        default_experiment_name             = "rugged"
         default_mainpath                    = "~"         # HP parameter is "honours2021"
         default_output_path                 = "/storage/honours2021"
         default_total_runs                  = 10                     # HP parameter is 30
