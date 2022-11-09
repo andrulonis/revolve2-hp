@@ -19,7 +19,7 @@ num_generations="$(python3 experiments/default_study/get_param.py --get_default 
 mainpath="$(python3 experiments/default_study/get_param.py --get_default mainpath)"
 output_path="$(python3 experiments/default_study/get_param.py --get_default output_path)"
 
-num_terminals=5
+num_terminals=1
 
 
 mkdir -p ${output_path}/${study}/analysis
