@@ -7,6 +7,7 @@ from pyrr import Quaternion, Vector3
 from revolve2.core.physics.actor import Actor, Collision, Joint, RigidBody, Visual
 
 from ._active_hinge import ActiveHinge
+from ._bone import Bone
 from ._brick import Brick
 from ._core import Core
 from ._module import Module
@@ -189,6 +190,14 @@ class _ActorBuilder:
                 attachment_offset,
                 orientation,
             )
+        elif isinstance(module, Bone):
+            self._make_bone(
+                module,
+                body,
+                name_prefix,
+                attachment_offset,
+                orientation,
+            )
         else:
             raise NotImplementedError("Module type not implemented")
 
@@ -287,6 +296,64 @@ class _ActorBuilder:
             ("front", Brick.FRONT, 0.0),
             ("left", Brick.LEFT, math.pi / 2.0),
             ("right", Brick.RIGHT, math.pi / 2.0 * 3),
+        ]:
+            child = module.children[child_index]
+            if child is not None:
+                rotation = (
+                    orientation
+                    * Quaternion.from_eulers([0.0, 0.0, angle])
+                    * Quaternion.from_eulers([child.rotation, 0, 0])
+                )
+
+                self._make_module(
+                    child,
+                    body,
+                    f"{name_prefix}_{name_suffix}",
+                    position + rotation * Vector3([CHILD_OFFSET, 0.0, 0.0]),
+                    rotation,
+                )
+
+    def _make_bone(
+        self,
+        module: Bone,
+        body: RigidBody,
+        name_prefix: str,
+        attachment_point: Vector3,
+        orientation: Quaternion,
+    ) -> None:
+
+        module = analyzer_module.module
+        assert isinstance(module, Bone)
+
+        BOUNDING_BOX = Vector3([module.bone_length, 0.06288625, 0.0603])  # meter
+        MASS = 0.030 / 0.0603 * module.bone_length # kg
+        CHILD_OFFSET = module.bone_length / 2.0  # meter
+
+        position = attachment_point + orientation * Vector3(
+            [BOUNDING_BOX[0] / 2.0, 0.0, 0.0]
+        )
+
+        body.collisions.append(
+            Collision(
+                f"{name_prefix}_bone_collision",
+                position,
+                orientation,
+                MASS,
+                BOUNDING_BOX,
+            )
+        )
+        body.visuals.append(
+            Visual(
+                f"{name_prefix}_bone_visual",
+                position,
+                orientation,
+                "model://rg_robot/meshes/FixedBrick.dae",
+                (1.0, 0.0, 0.0),
+            )
+        )
+
+        for (name_suffix, child_index, angle) in [
+            ("front", Brick.FRONT, 0.0),
         ]:
             child = module.children[child_index]
             if child is not None:

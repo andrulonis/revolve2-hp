@@ -26,7 +26,7 @@ def random_v1(
             output_activation_func,
             #3,  # bias(always 1), pos_x, pos_y
             2,  # pos_x, pos_y
-            4,  # brick, activehinge, rot0, rot90
+            6,  # brick, activehinge, bone, rot0, rot90, bone_length
             num_initial_mutations,
         )
     else:
@@ -37,7 +37,7 @@ def random_v1(
             output_activation_func,
             # 4,  # bias(always 1), pos_x, pos_y, inclined
             3,  #   pos_x, pos_y, inclined
-            4,  # brick, activehinge, rot0, rot90
+            6,  # brick, activehinge, bone, rot0, rot90, bone_length
             num_initial_mutations,
         )
 

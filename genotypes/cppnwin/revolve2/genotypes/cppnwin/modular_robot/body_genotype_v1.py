@@ -24,7 +24,7 @@ def random_v1(
         multineat_params,
         output_activation_func,
         5,  # bias(always 1), pos_x, pos_y, pos_z, chain_length
-        5,  # empty, brick, activehinge, rot0, rot90
+        7,  # empty, brick, activehinge, bone, rot0, rot90, bone_length
         num_initial_mutations,
     )
 

@@ -1,23 +1,22 @@
 from __future__ import annotations
 
 import logging
-from abc import abstractmethod
-from dataclasses import dataclass
-from typing import Generic, List, Optional, Tuple, Type, TypeVar, Dict
 import math
-
+import pprint
+import sys
+from abc import abstractmethod
+from ast import literal_eval
+from dataclasses import dataclass
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.ext.asyncio import AsyncEngine
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
+from typing import Generic, List, Optional, Tuple, Type, TypeVar, Dict
 
 from revolve2.core.database import IncompatibleError, Serializer
 from revolve2.core.modular_robot import MeasureRelative
 from revolve2.core.optimization import Process, ProcessIdGen
-from ast import literal_eval
-import sys
-
 from ._database import (
     DbBase,
     DbEnvconditions,
@@ -27,8 +26,6 @@ from ._database import (
     DbEAOptimizerParent,
     DbEAOptimizerState,
 )
-
-import pprint
 
 Genotype = TypeVar("Genotype")
 Measure = TypeVar("Measure")
@@ -467,7 +464,8 @@ class EAOptimizer(Process, Generic[Genotype, Measure]):
             for cond in self.__env_conditions:
                 initial_measures[cond] = self.__latest_measures[cond]
                 initial_states[cond] = self.__latest_states[cond]
-                self._pool_and_time_relative_measures(self.__latest_population, self.__latest_measures[cond])
+                self.measures = self._pool_and_time_relative_measures(self.__latest_population,
+                                                                      self.__latest_measures[cond])
 
             self._pool_seasonal_relative_measures(self.__latest_population, self.__latest_measures)
             self._pop_relative_measures()
@@ -549,6 +547,8 @@ class EAOptimizer(Process, Generic[Genotype, Measure]):
 
             # let user select survivors between old and new individuals
             new_fitnesses = self.collect_key_value(new_measures[any_cond], self.__fitness_measure)
+            new_fitnesses = [x if x < 100 else 0. for x in new_fitnesses]
+            #logging.info(new_fitnesses)
             old_survivors, new_survivors = self.__safe_select_survivors(
                 [i.genotype for i in self.__latest_population],
                 latest_fitnesses,
