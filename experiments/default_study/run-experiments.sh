@@ -11,7 +11,7 @@ mkdir -p ${mainpath}/${study};
 
 ##BACKGROUND
 screen -d -m -S run_loop_${experiment_name}_$(date +%F_%T) -L -Logfile ${output_path}/${study}/setuploop_${experiment_name}.log ./experiments/${study}/setup-experiments.sh
-echo "running experiments in background. See progress in ${output_path}/${study}"
+echo "running experiments in background. See progress in ${output_path}/${study}. Overview of processes: 'screen -list'. Attach terminal: 'screen -r <terminal>. Unattach terminal: 'ctrl+a d'"
 
 ##FOREGROUND
 #screen -m -S run_loop_${study}_$(date +%F_%T) -L -Logfile ${output_path}/${study}/setuploop.log ./experiments/${study}/setup-experiments.sh

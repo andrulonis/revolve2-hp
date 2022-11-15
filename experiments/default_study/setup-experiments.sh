@@ -18,6 +18,7 @@ runs="$(python3 experiments/default_study/get_param.py --get_default total_runs)
 num_generations="$(python3 experiments/default_study/get_param.py --get_default num_generations)"
 mainpath="$(python3 experiments/default_study/get_param.py --get_default mainpath)"
 output_path="$(python3 experiments/default_study/get_param.py --get_default output_path)"
+echo "output path = ${output_path}\n"
 
 num_terminals=1
 

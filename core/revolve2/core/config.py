@@ -21,10 +21,10 @@ class Config():
         default_mutation_prob               = 1
         default_fitness_measure             = "speed_y"
         default_study_name                  = "default_study"       # HP parameter default_study
-        default_experiment_name             = "sinewave"
+        default_experiment_name             = "defaultexperiment"
         default_mainpath                    = "~"         # HP parameter is "honours2021"
         default_output_path                 = "/storage/honours2021"
-        default_total_runs                  = 20                     # HP parameter is 30
+        default_total_runs                  = 20                     # HP parameter is/was 30 (!!!chris and andrzej currently running 20)
         default_run                         = 1
         default_simulation_time             = 30
         default_sampling_frequency          = 5
