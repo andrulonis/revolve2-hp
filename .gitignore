@@ -3,7 +3,7 @@ data/
 .venv
 
 # isaacgym
-isaacgym/
+/isaacgym/
 !runners/isaacgym/revolve2/runners/isaacgym/
 !runners/isaacgym/revolve2/runners/isaacgym/other_terrains/
 
