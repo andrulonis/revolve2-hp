@@ -137,7 +137,6 @@ def contour_plots(df_all):
         x, y, z = gen_df[x_label], gen_df[y_label], gen_df["speed_y"]
         plt.hist(x)
         plt.hist(y)
-        plt.show()
         xi = np.linspace(min(x), max(x), 200)
         yi = np.linspace(min(y), max(y), 200)
 
