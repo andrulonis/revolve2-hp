@@ -205,6 +205,19 @@ class Canvas:
 		self.sign_id(mod_id)
 		Canvas.movement_stack.append([Canvas.x_pos, Canvas.y_pos, Canvas.orientation, Canvas.rotating_orientation])
 
+	def draw_bone(self, mod_id, bone_length):
+		"""Draw a module (gradient) on the previous object"""
+		lower_bound_gradient = 0.2
+		self.context.rectangle(Canvas.x_pos, Canvas.y_pos, 1, 1)
+		self.context.set_source_rgb(0, min(lower_bound_gradient+(1-lower_bound_gradient)*bone_length, 1), 0)
+		self.context.fill_preserve()
+		self.context.set_source_rgb(0, 0, 0)
+		self.context.set_line_width(0.01)
+		self.context.stroke()
+		self.calculate_orientation()
+		self.sign_id(mod_id)
+		Canvas.movement_stack.append([Canvas.x_pos, Canvas.y_pos, Canvas.orientation, Canvas.rotating_orientation])
+
 	def calculate_sensor_rectangle_position(self):
 		"""Calculate squeezed sensor rectangle position based on current orientation and last movement direction"""
 		if (Canvas.previous_move == -1 or
