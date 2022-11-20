@@ -1,7 +1,7 @@
 import cairo
 from .canvas import Canvas
 from .grid import Grid
-from revolve2.core.modular_robot import Core, ActiveHinge, Brick
+from revolve2.core.modular_robot import Core, ActiveHinge, Brick, Bone
 
 
 class Render:
@@ -36,6 +36,12 @@ class Render:
             Canvas.rotating_orientation = module._absolute_rotation
             canvas.draw_module(module.id)
             canvas.draw_connector_to_parent()
+        elif isinstance(module, Bone):
+            canvas.move_by_slot(slot)
+            Canvas.rotating_orientation = module._absolute_rotation
+            canvas.draw_bone(module.id, module.bone_length)
+            canvas.draw_connector_to_parent()
+
 
         if module.has_children():
             # Traverse children of element to draw on canvas
@@ -55,7 +61,7 @@ class Render:
         @param slot: attachment of parent slot
         @param include_sensors: add sensors to visisted_cooridnates if True
         """
-        if isinstance(module, ActiveHinge) or isinstance(module, Brick):
+        if isinstance(module, ActiveHinge) or isinstance(module, Brick) or isinstance(module, Bone):
             self.grid.move_by_slot(slot)
             self.grid.add_to_visited(include_sensors, False)
         if module.has_children():
