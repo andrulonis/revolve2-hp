@@ -24,7 +24,7 @@ class Config():
         default_experiment_name             = "defaultexperiment"
         default_mainpath                    = "~"         # HP parameter is "honours2021"
         default_output_path                 = "/storage/honours2021"
-        default_total_runs                  = 30                     # HP parameter is 30
+        default_total_runs                  = 20                     # HP parameter is 30
         default_run                         = 1
         default_simulation_time             = 30
         default_sampling_frequency          = 5
