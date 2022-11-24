@@ -102,6 +102,11 @@ class Body:
                     rotation = Quaternion()
                 else:
                     raise NotImplementedError()
+            elif isinstance(parent, Bone):
+                if child_index == Bone.FRONT:
+                    rotation = Quaternion.from_eulers((0.0, 0.0, 0.0))
+                else:
+                    raise NotImplementedError()
             else:
                 raise NotImplementedError()
             position = rotation * position
