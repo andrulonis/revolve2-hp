@@ -97,14 +97,14 @@ class Body:
                     rotation = Quaternion.from_eulers((0.0, 0.0, math.pi / 2.0 * 3))
                 else:
                     raise NotImplementedError()
-            elif isinstance(parent, ActiveHinge):
-                if child_index == ActiveHinge.ATTACHMENT:
-                    rotation = Quaternion()
-                else:
-                    raise NotImplementedError()
             elif isinstance(parent, Bone):
                 if child_index == Bone.FRONT:
                     rotation = Quaternion.from_eulers((0.0, 0.0, 0.0))
+                else:
+                    raise NotImplementedError()
+            elif isinstance(parent, ActiveHinge):
+                if child_index == ActiveHinge.ATTACHMENT:
+                    rotation = Quaternion()
                 else:
                     raise NotImplementedError()
             else:
