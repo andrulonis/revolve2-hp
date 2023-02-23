@@ -122,7 +122,7 @@ def plot_lines(df_outer):
 
             if include_max:
                 ax.plot(data['generation_index'], data[f'{measure}_{inner_metrics[1]}_median'],
-                        'b--', label=f'{experiment}_{inner_metrics[1]}_gen', c=drk_clrs[idx_experiment])
+                        'b--', label=f'{experiment}_{inner_metrics[1]}', c=drk_clrs[idx_experiment])
                 ax.fill_between(data['generation_index'],
                                 data[f'{measure}_{inner_metrics[1]}_q25'],
                                 data[f'{measure}_{inner_metrics[1]}_q75'],
