@@ -23,7 +23,7 @@ class Config():
         default_study_name                  = "default_study"       # HP parameter default_study
         default_experiment_name             = "defaultexperiment"
         default_mainpath                    = "~"         # HP parameter is "honours2021"
-        default_output_path                 = "/storage/honours2021"
+        default_output_path                 = "/storage/honours2021"        # CHRIS: "/mnt/data/hp/data"
         default_total_runs                  = 20                     # HP parameter is/was 30 (!!!chris and andrzej currently running 20)
         default_run                         = 1
         default_simulation_time             = 30

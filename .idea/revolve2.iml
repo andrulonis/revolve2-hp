@@ -10,7 +10,7 @@
       <sourceFolder url="file://$MODULE_DIR$/runners/isaacgym" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/serialization" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.8 (revolve2-hp)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.8 (revolve2-hp-standard)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

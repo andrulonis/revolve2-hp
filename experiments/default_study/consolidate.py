@@ -102,6 +102,8 @@ class Analysis:
                 else:
                     all_df = pandas.concat([all_df, df], axis=0)
 
+        print("Processing...\n")
+
         all_df = all_df[all_df['generation_index'] <= self.final_gen]
 
         keys = ['experiment', 'run', 'generation_index', 'env_conditions_id']

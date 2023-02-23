@@ -7,6 +7,7 @@ import numpy as np
 from statannot import add_stat_annotation
 import pprint
 import sys
+import os
 
 ###TODO??? are these arguments absolute idk
 parser = argparse.ArgumentParser()
@@ -15,6 +16,7 @@ parser.add_argument("experiments")
 parser.add_argument("runs")
 parser.add_argument("generations")
 parser.add_argument("output_path")
+parser.add_argument("include_max")
 args = parser.parse_args()
 
 study = args.study
@@ -27,13 +29,28 @@ study = study
 experiments = experiments_name
 inner_metrics = ['median', 'max']
 runs = runs
-include_max = False
+include_max = args.include_max
 merge_lines = True
 gens_boxes = generations
-clrs = ['#009900',
-        '#EE8610',
-        '#7550ff',
-        '#876044']
+
+plot_dir = ""
+if include_max:
+    plot_dir = "max_plots"
+else:
+    plot_dir = "basic_plots"
+
+clrs = ['#009900',  #green
+        '#EE8610',  #orange
+        '#7550ff',  #blue
+        '#876044',  #brown
+        '#7942bd',  #purple
+        '#d9252b']  #red
+drk_clrs = ['#016601',
+            '#bd6c0f',
+            '#593dbf',
+            '#5c412e',
+            '#563085',
+            '#ad1d22']
 path = f'{output_path}/{study}'
 
 measures = {
@@ -68,6 +85,9 @@ measures = {
 
 
 def plots():
+
+    if not os.path.exists(f'{path}/analysis/{plot_dir}'):
+        os.makedirs(f'{path}/analysis/{plot_dir}')
 
     df_inner = pandas.read_csv(f'{path}/analysis/df_inner.csv')
     df_outer = pandas.read_csv(f'{path}/analysis/df_outer.csv')
@@ -106,21 +126,21 @@ def plot_lines(df_outer):
                 ax.fill_between(data['generation_index'],
                                 data[f'{measure}_{inner_metrics[1]}_q25'],
                                 data[f'{measure}_{inner_metrics[1]}_q75'],
-                                alpha=0.3, facecolor=clrs[idx_experiment])
+                                alpha=0.3, facecolor=drk_clrs[idx_experiment])
 
             # if measures[measure][1] != -math.inf and measures[measure][2] != -math.inf:
             #     ax.set_ylim(measures[measure][1], measures[measure][2])
 
             ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.1),  fancybox=True, shadow=True, ncol=5, fontsize=10)
             if not merge_lines:
-                plt.savefig(f'{path}/analysis/basic_plots/line_{experiment}_{measure}.png', bbox_inches='tight')
+                plt.savefig(f'{path}/analysis/{plot_dir}/line_{experiment}_{measure}.png', bbox_inches='tight')
                 plt.clf()
                 plt.close(fig)
                 plt.rcParams.update(font)
                 fig, ax = plt.subplots()
 
         if merge_lines:
-            plt.savefig(f'{path}/analysis/basic_plots/line_{measure}.png', bbox_inches='tight')
+            plt.savefig(f'{path}/analysis/{plot_dir}/line_{measure}.png', bbox_inches='tight')
             plt.clf()
             plt.close(fig)
 
@@ -152,7 +172,7 @@ def contour_plots(df_all):
         #plt.scatter(x, y)
         plt.xlabel(x_label)
         plt.ylabel(y_label)
-        plt.savefig(f'{path}/analysis/basic_plots/contour_{x_label}_{y_label}.png', bbox_inches='tight')
+        plt.savefig(f'{path}/analysis/{plot_dir}/contour_{x_label}_{y_label}.png', bbox_inches='tight')
         plt.clf()
         plt.close()
 
@@ -188,7 +208,7 @@ def plot_boxes(df_inner):
             #     plot.set_ylim(measures[measure][1], measures[measure][2])
             plt.xlabel('')
             plt.ylabel(f'{measures[measure][0]}')
-            plot.get_figure().savefig(f'{path}/analysis/basic_plots/box_{measure}_{gen_boxes}.png', bbox_inches='tight')
+            plot.get_figure().savefig(f'{path}/analysis/{plot_dir}/box_{measure}_{gen_boxes}.png', bbox_inches='tight')
             plt.clf()
             plt.close()
 
