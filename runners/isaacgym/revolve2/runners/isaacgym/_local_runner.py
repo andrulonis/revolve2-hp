@@ -1,6 +1,6 @@
-'''==========================
-|   ANDRZEJ SINE WAVES      |
-=========================='''
+##############################
+# CHRIS: RUGGED FLAT PLANE   #
+##############################
 
 import math
 import multiprocessing as mp
@@ -13,7 +13,7 @@ import colored
 import numpy as np
 from isaacgym import gymapi
 from pyrr import Quaternion, Vector3
-from isaacgym.terrain_utils import * # TODO: import of terrains
+from isaacgym.terrain_utils import *  # TODO: import of terrains
 
 from revolve2.core.physics.actor import Actor
 from revolve2.core.physics.actor.urdf import to_urdf as physbot_to_urdf
@@ -53,12 +53,12 @@ class LocalRunner(Runner):
         ]  # environments, in same order as provided by batch description
 
         def __init__(
-            self,
-            batch: Batch,
-            sim_params: gymapi.SimParams,
-            headless: bool,
-            real_time: bool,
-            env_conditions: List,
+                self,
+                batch: Batch,
+                sim_params: gymapi.SimParams,
+                headless: bool,
+                real_time: bool,
+                env_conditions: List,
         ):
             self._gym = gymapi.acquire_gym()
             self._batch = batch
@@ -85,44 +85,37 @@ class LocalRunner(Runner):
             return sim
 
         def _create_envs(self) -> List[GymEnv]:
+            '''==========================
+            |   BEGIN CUSTOM TERRAIN    |
+            =========================='''
             gymenvs: List[LocalRunner._Simulator.GymEnv] = []
 
             # TODO this is only temporary. When we switch to the new isaac sim it should be easily possible to
             # let the user create static object, rendering the group plane redundant.
             # But for now we keep it because it's easy for our first test release.
-            
-            # plane_params = gymapi.PlaneParams()
-            # static_friction, dynamic_friction, y_rotation_degrees = self._env_conditions
-            # y_rotation_degrees = float(y_rotation_degrees)
-            # static_friction = float(static_friction)
-            # dynamic_friction = float(dynamic_friction)
-            # # adds (possible) rotation to the y-axis
-            # # ps: because camera is also rotated, we see the hill raising from the center to the right of the screen
-            # plane_params.normal = gymapi.Vec3(0.0,
-            #                                   -np.sin(y_rotation_degrees*np.pi/180),
-            #                                   np.cos(y_rotation_degrees*np.pi/180))
-            # plane_params.distance = 0
-            # plane_params.static_friction = static_friction
-            # plane_params.dynamic_friction = dynamic_friction
-            # plane_params.restitution = 0
-            # self._gym.add_ground(self._sim, plane_params)
-
-            # TODO: creating custom terrains, even waves as an example, uncomment the above code and comment the code below until self._gym... to get flat plane
-            horizontal_scale = 0.0125  # [m] 0.25 0.0125
-            vertical_scale = 0.00025  # [m] 0.005 0.00025
-            heightfield = wave_terrain(SubTerrain(width=1000, length=1000, vertical_scale=vertical_scale, horizontal_scale=horizontal_scale), num_waves=50., amplitude=0.04).height_field_raw
-            #heightfield = pyramid_stairs_terrain(SubTerrain(width=512, length=512, vertical_scale=vertical_scale, horizontal_scale=horizontal_scale), step_width=10., step_height=-0.3, platform_size=1.).height_field_raw
-            vertices, triangles = convert_heightfield_to_trimesh(heightfield, horizontal_scale=horizontal_scale, vertical_scale=vertical_scale, slope_threshold=1.5)
+            plane_params = gymapi.PlaneParams()
+            plane_params.normal = gymapi.Vec3(0, 0, 1)
+            plane_params.distance = 5
+            plane_params.static_friction = 1.0
+            plane_params.dynamic_friction = 1.0
+            plane_params.restitution = 0
+            self._gym.add_ground(self._sim, plane_params)
+            # TODO: creating custom terrains
+            horizontal_scale = 0.25  # [m]
+            vertical_scale = 0.005  # [m]
+            heightfield = pyramid_sloped_terrain(SubTerrain(width= 1000, length=1000, vertical_scale=vertical_scale, horizontal_scale=horizontal_scale), slope=0.10).height_field_raw
+            vertices, triangles = convert_heightfield_to_trimesh(heightfield, horizontal_scale=0.05, vertical_scale=0.002)
             tm_params = gymapi.TriangleMeshParams()
             tm_params.nb_vertices = vertices.shape[0]
             tm_params.nb_triangles = triangles.shape[0]
-            #TODO: offsets of the terrain, tweaked to fit the centre perfectly with the robot
-            tm_params.static_friction = 1.0
-            tm_params.dynamic_friction = 1.0
-            tm_params.transform.p.x = -3.25
-            tm_params.transform.p.y = -3.25
-            tm_params.transform.p.z = -0.125
+            #TODO: offsets of the terrain, tweaked so the group of robots is centered for 100 population size
+            tm_params.transform.p.x = -23.75
+            tm_params.transform.p.y = -23.75
+            tm_params.transform.p.z = -5
             self._gym.add_triangle_mesh(self._sim, vertices.flatten(), triangles.flatten(), tm_params)
+            '''==========================
+            |   END CUSTOM TERRAIN      |
+            =========================='''
 
             num_per_row = int(math.sqrt(len(self._batch.environments)))
 
@@ -203,6 +196,7 @@ class LocalRunner(Runner):
                     props["driveMode"].fill(gymapi.DOF_MODE_POS)
                     props["stiffness"].fill(1.0)
                     props["damping"].fill(0.05)
+                    props["friction"].fill(0.2)
                     self._gym.set_actor_dof_properties(env, actor_handle, props)
 
                     all_rigid_props = self._gym.get_actor_rigid_shape_properties(
@@ -210,11 +204,11 @@ class LocalRunner(Runner):
                     )
 
                     for body, rigid_props in zip(
-                        posed_actor.actor.bodies,
-                        all_rigid_props,
+                            posed_actor.actor.bodies,
+                            all_rigid_props,
                     ):
-                        rigid_props.friction = body.static_friction
-                        rigid_props.rolling_friction = body.dynamic_friction
+                        rigid_props.friction = 0.2
+                        rigid_props.rolling_friction = 0.2
 
                     self._gym.set_actor_rigid_shape_properties(
                         env, actor_handle, all_rigid_props
@@ -237,7 +231,7 @@ class LocalRunner(Runner):
             num_per_row = math.sqrt(len(self._batch.environments))
 
             # TEMP adjustment of camera position
-            num_per_row = num_per_row*1.7
+            num_per_row = num_per_row * 1.7
 
             cam_pos = gymapi.Vec3(
                 num_per_row / 2.0 + 0.5, num_per_row / 2.0 - 0.5, num_per_row
@@ -262,7 +256,7 @@ class LocalRunner(Runner):
             self._append_states(results, 0.0)
 
             while (
-                time := self._gym.get_sim_time(self._sim)
+                    time := self._gym.get_sim_time(self._sim)
             ) < self._batch.simulation_time:
                 # do control if it is time
                 if time >= last_control_time + control_step:
@@ -305,23 +299,23 @@ class LocalRunner(Runner):
             return results
 
         def set_actor_dof_position_targets(
-            self,
-            env_handle: gymapi.Env,
-            actor_handle: int,
-            actor: Actor,
-            targets: List[float],
+                self,
+                env_handle: gymapi.Env,
+                actor_handle: int,
+                actor: Actor,
+                targets: List[float],
         ) -> None:
             if len(targets) != len(actor.joints):
                 raise RuntimeError("Need to set a target for every dof")
 
             if not all(
-                [
-                    target >= -joint.range and target <= joint.range
-                    for target, joint in zip(
+                    [
+                        target >= -joint.range and target <= joint.range
+                        for target, joint in zip(
                         targets,
                         actor.joints,
                     )
-                ]
+                    ]
             ):
                 raise RuntimeError("Dof targets must lie within the joints range.")
 
@@ -332,11 +326,11 @@ class LocalRunner(Runner):
             )
 
         def set_actor_dof_positions(
-            self,
-            env_handle: gymapi.Env,
-            actor_handle: int,
-            actor: Actor,
-            positions: List[float],
+                self,
+                env_handle: gymapi.Env,
+                actor_handle: int,
+                actor: Actor,
+                positions: List[float],
         ) -> None:
             num_dofs = len(actor.joints)
 
@@ -360,7 +354,7 @@ class LocalRunner(Runner):
 
         def _append_states(self, batch_results: BatchResults, time: float) -> None:
             for gymenv, environment_results in zip(
-                self._gymenvs, batch_results.environment_results
+                    self._gymenvs, batch_results.environment_results
             ):
                 env_state = EnvironmentState(time, [])
                 for actor_handle in gymenv.actors:
@@ -389,11 +383,11 @@ class LocalRunner(Runner):
     _real_time: bool
 
     def __init__(
-        self,
-        sim_params: gymapi.SimParams,
-        env_conditions: List,
-        headless: bool = False,
-        real_time: bool = False,
+            self,
+            sim_params: gymapi.SimParams,
+            env_conditions: List,
+            headless: bool = False,
+            real_time: bool = False,
     ):
         self._sim_params = sim_params
         self._headless = headless
@@ -458,13 +452,13 @@ class LocalRunner(Runner):
 
     @classmethod
     def _run_batch_impl(
-        cls,
-        result_queue: mp.Queue,  # type: ignore # TODO
-        batch: Batch,
-        sim_params: gymapi.SimParams,
-        headless: bool,
-        real_time: bool,
-        env_conditions: List,
+            cls,
+            result_queue: mp.Queue,  # type: ignore # TODO
+            batch: Batch,
+            sim_params: gymapi.SimParams,
+            headless: bool,
+            real_time: bool,
+            env_conditions: List,
     ) -> None:
         _Simulator = cls._Simulator(batch, sim_params, headless, real_time, env_conditions)
         batch_results = _Simulator.run()
