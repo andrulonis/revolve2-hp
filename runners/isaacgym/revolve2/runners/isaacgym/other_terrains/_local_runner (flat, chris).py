@@ -1,5 +1,5 @@
 ##############################
-# CHRIS: RUGGED FLAT PLANE   #
+# CHRIS: FLAT PLANE          #
 ##############################
 
 import math
@@ -94,32 +94,20 @@ class LocalRunner(Runner):
             # let the user create static object, rendering the group plane redundant.
             # But for now we keep it because it's easy for our first test release.
             plane_params = gymapi.PlaneParams()
-            plane_params.normal = gymapi.Vec3(0, 0, 1)
+            static_friction, dynamic_friction, y_rotation_degrees = self._env_conditions
+            y_rotation_degrees = float(y_rotation_degrees)
+            static_friction = float(static_friction)
+            dynamic_friction = float(dynamic_friction)
+            # adds (possible) rotation to the y-axis
+            # ps: because camera is also rotated, we see the hill raising from the center to the right of the screen
+            plane_params.normal = gymapi.Vec3(0.0,
+                                              -np.sin(y_rotation_degrees * np.pi / 180),
+                                              np.cos(y_rotation_degrees * np.pi / 180))
             plane_params.distance = 0
-            plane_params.static_friction = 1.0
-            plane_params.dynamic_friction = 1.0
+            plane_params.static_friction = static_friction
+            plane_params.dynamic_friction = dynamic_friction
             plane_params.restitution = 0
-            # self._gym.add_ground(self._sim, plane_params)
-
-
-            # TODO: creating custom terrains
-            horizontal_scale = 0.25  # [m]
-            vertical_scale = 0.005  # [m]
-            # heightfield = pyramid_sloped_terrain(SubTerrain(width=512, length=512, vertical_scale=vertical_scale, horizontal_scale=horizontal_scale), slope=-0.5).height_field_raw
-            # heightfield= pyramid_stairs_terrain(SubTerrain(width=512, length=512, vertical_scale=vertical_scale, horizontal_scale=horizontal_scale), step_width=5., step_height=-0.5, platform_size=1.).height_field_raw
-            heightfield = random_uniform_terrain(
-                SubTerrain(width=512, length=512, vertical_scale=vertical_scale, horizontal_scale=horizontal_scale),
-                min_height=-0.9, max_height=0.9, step=0.5, downsampled_scale=0.9).height_field_raw
-            vertices, triangles = convert_heightfield_to_trimesh(heightfield, horizontal_scale=0.0125,
-                                                                 vertical_scale=0.00025, slope_threshold=1.5)
-            tm_params = gymapi.TriangleMeshParams()
-            tm_params.nb_vertices = vertices.shape[0]
-            tm_params.nb_triangles = triangles.shape[0]
-            # TODO: offsets of the terrain, tweaked to fit the centre perfectly with the robot
-            tm_params.transform.p.x = -3.25
-            tm_params.transform.p.y = -3.25
-            tm_params.transform.p.z = -0.7  # for pyramid it was tm_params.transform.p.z = 0.274
-            self._gym.add_triangle_mesh(self._sim, vertices.flatten(), triangles.flatten(), tm_params)
+            self._gym.add_ground(self._sim, plane_params)
             '''==========================
             |   END CUSTOM TERRAIN      |
             =========================='''
