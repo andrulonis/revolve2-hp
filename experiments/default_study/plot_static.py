@@ -7,6 +7,7 @@ import numpy as np
 from statannot import add_stat_annotation
 import pprint
 import sys
+import os
 
 ###TODO??? are these arguments absolute idk
 parser = argparse.ArgumentParser()
@@ -128,34 +129,70 @@ def plot_lines(df_outer):
 
 
 def contour_plots(df_all):
+    print("plotting contours")
     run_df = df_all
     gen = max(run_df["generation_index"])
-    gen_df = run_df[run_df["generation_index"]==gen]
+    gen_lower = gen-10
+    gen_df_max = run_df[run_df["generation_index"]==gen]
+    gen_df_last_10 = run_df[(gen_lower<=run_df["generation_index"]) & (run_df["generation_index"] <=gen)]
     
-    x_labels, y_labels = ["hinge_prop", "extremities_prop"], ["coverage", "coverage"]
-    for x_label, y_label in zip(x_labels, y_labels):
-        x, y, z = gen_df[x_label], gen_df[y_label], gen_df["speed_y"]
-        plt.hist(x)
-        plt.hist(y)
-        xi = np.linspace(min(x), max(x), 200)
-        yi = np.linspace(min(y), max(y), 200)
+    x_labels = ['coverage', 'symmetry', 'hinge_ratio', 'brick_prop', 'branching_prop', 'extremities_prop', 'extensiveness_prop', 'width', 'height']
+    y_labels = ['coverage', 'symmetry', 'hinge_ratio', 'brick_prop', 'branching_prop', 'extremities_prop', 'extensiveness_prop', 'width', 'height']
 
-        # Linearly interpolate the data (x, y) on a grid defined by (xi, yi).
-        triang = tri.Triangulation(x, y)
-        interpolator = tri.LinearTriInterpolator(triang, z)
-        Xi, Yi = np.meshgrid(xi, yi)
-        zi = interpolator(Xi, Yi)
-        
-        plt.contour(xi, yi, zi, levels=15, linewidths=0.5)
-        plt.contourf(xi, yi, zi, levels=15)#, cmap="RdBu_r")
-        plt.colorbar()
-        #plt.scatter(x, y)
-        plt.xlabel(x_label)
-        plt.ylabel(y_label)
-        plt.savefig(f'{path}/analysis/basic_plots/contour_{x_label}_{y_label}.png', bbox_inches='tight')
-        plt.clf()
-        plt.close()
+    if not os.path.exists(f"{path}/analysis/basic_plots/heatmaps"):
+        os.mkdir(f"{path}/analysis/basic_plots/heatmaps")
+    for x_label in x_labels:
+        for y_label in y_labels:
+            if x_label == y_label: continue
+            print(x_label, y_label)
+            x, y, z = gen_df_max[x_label], gen_df_max[y_label], gen_df_max["speed_y"]
+            xi = np.linspace(min(x), max(x), 200)
+            yi = np.linspace(min(y), max(y), 200)
 
+            # Linearly interpolate the data (x, y) on a grid defined by (xi, yi).
+            triang = tri.Triangulation(x, y)
+            interpolator = tri.LinearTriInterpolator(triang, z)
+            Xi, Yi = np.meshgrid(xi, yi)
+            zi = interpolator(Xi, Yi)
+            plt.clf()
+            plt.close()
+
+            plt.contour(xi, yi, zi, levels=15, linewidths=0.5)
+            plt.contourf(xi, yi, zi, levels=15)#, cmap="RdBu_r")
+            plt.colorbar()
+            #plt.scatter(x, y)
+            plt.xlabel(x_label)
+            plt.ylabel(y_label)
+            plt.savefig(f'{path}/analysis/basic_plots/heatmaps/contour_{x_label}_{y_label}.png', bbox_inches='tight')
+            plt.clf()
+            plt.close()
+
+    for x_label in x_labels:
+        for y_label in y_labels:
+            if x_label == y_label: continue
+            print(x_label, y_label)
+            x, y, z = gen_df_last_10[x_label], gen_df_last_10[y_label], gen_df_last_10["speed_y"]
+            xi = np.linspace(min(x), max(x), 200)
+            yi = np.linspace(min(y), max(y), 200)
+
+            # Linearly interpolate the data (x, y) on a grid defined by (xi, yi).
+            triang = tri.Triangulation(x, y)
+            interpolator = tri.LinearTriInterpolator(triang, z)
+            Xi, Yi = np.meshgrid(xi, yi)
+            zi = interpolator(Xi, Yi)
+            plt.clf()
+            plt.close()
+
+            plt.contour(xi, yi, zi, levels=15, linewidths=0.5)
+            plt.contourf(xi, yi, zi, levels=15)#, cmap="RdBu_r")
+            plt.colorbar()
+            #plt.scatter(x, y)
+            plt.xlabel(x_label)
+            plt.ylabel(y_label)
+            plt.savefig(f'{path}/analysis/basic_plots/heatmaps/contour_last10_{x_label}_{y_label}.png', bbox_inches='tight')
+            plt.clf()
+            plt.close()
+    
 def plot_boxes(df_inner):
     print('plotting boxes...')
 
@@ -230,7 +267,6 @@ def plot_boxes(df_inner):
 
 
 plots()
-
 
 
 
