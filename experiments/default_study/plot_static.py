@@ -5,6 +5,7 @@ import matplotlib.tri as tri
 import seaborn as sb
 import numpy as np
 from statannot import add_stat_annotation
+from statannotations.Annotator import Annotator
 import pprint
 import sys
 import os
@@ -29,25 +30,29 @@ study = study
 experiments = experiments_name
 inner_metrics = ['median', 'max']
 runs = runs
-include_max = args.include_max
+include_max_param = args.include_max
+include_max = False
 merge_lines = True
 gens_boxes = generations
-
 plot_dir = ""
-if include_max:
+if include_max_param == '1' or include_max_param == 'true':
+    print("setting plot_dir to max_plots")
+    include_max = True
     plot_dir = "max_plots"
 else:
+    print("setting plot_dir to basic_plots")
+    include_max = False
     plot_dir = "basic_plots"
 
 clrs = ['#009900',  #green
         '#EE8610',  #orange
-        '#7550ff',  #blue
+        '#1882ed',  #blue
         '#876044',  #brown
         '#7942bd',  #purple
         '#d9252b']  #red
 drk_clrs = ['#016601',
             '#bd6c0f',
-            '#593dbf',
+            '#115fad',
             '#5c412e',
             '#563085',
             '#ad1d22']
@@ -95,12 +100,12 @@ def plots():
 
     plot_lines(df_outer)
     plot_boxes(df_inner)
-    contour_plots(df_all)
+    #contour_plots(df_all)
 
 def plot_lines(df_outer):
 
     print('plotting lines...')
-
+    print(f'\toutput at {path}/analysis/{plot_dir}')
     #min_max_outer(df_outer)
     for measure in measures.keys():
 
@@ -115,10 +120,10 @@ def plot_lines(df_outer):
 
             ax.plot(data['generation_index'], data[f'{measure}_{inner_metrics[0]}_median'],
                     label=f'{experiment}_{inner_metrics[0]}', c=clrs[idx_experiment])
-            ax.fill_between(data['generation_index'],
-                            data[f'{measure}_{inner_metrics[0]}_q25'],
-                            data[f'{measure}_{inner_metrics[0]}_q75'],
-                            alpha=0.3, facecolor=clrs[idx_experiment])
+            #ax.fill_between(data['generation_index'],
+            #                data[f'{measure}_{inner_metrics[0]}_q25'],
+            #                data[f'{measure}_{inner_metrics[0]}_q75'],
+            #                alpha=0.3, facecolor=clrs[idx_experiment])
 
             if include_max:
                 ax.plot(data['generation_index'], data[f'{measure}_{inner_metrics[1]}_median'],
@@ -131,7 +136,7 @@ def plot_lines(df_outer):
             # if measures[measure][1] != -math.inf and measures[measure][2] != -math.inf:
             #     ax.set_ylim(measures[measure][1], measures[measure][2])
 
-            ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.1),  fancybox=True, shadow=True, ncol=5, fontsize=10)
+            ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.1),  fancybox=True, shadow=True, ncol=3, fontsize=10)
             if not merge_lines:
                 plt.savefig(f'{path}/analysis/{plot_dir}/line_{experiment}_{measure}.png', bbox_inches='tight')
                 plt.clf()
@@ -149,6 +154,7 @@ def plot_lines(df_outer):
 
 def contour_plots(df_all):
     print("plotting contours")
+    print(f'\toutput at {path}/analysis/{plot_dir}')
     run_df = df_all
     gen = max(run_df["generation_index"])
     gen_lower = gen-10
@@ -158,8 +164,8 @@ def contour_plots(df_all):
     x_labels = ['coverage', 'symmetry', 'hinge_ratio', 'brick_prop', 'branching_prop', 'extremities_prop', 'extensiveness_prop', 'width', 'height']
     y_labels = ['coverage', 'symmetry', 'hinge_ratio', 'brick_prop', 'branching_prop', 'extremities_prop', 'extensiveness_prop', 'width', 'height']
 
-    if not os.path.exists(f"{path}/analysis/basic_plots/heatmaps"):
-        os.mkdir(f"{path}/analysis/basic_plots/heatmaps")
+    if not os.path.exists(f"{path}/analysis/{plot_dir}/heatmaps"):
+        os.mkdir(f"{path}/analysis/{plot_dir}/heatmaps")
     for x_label in x_labels:
         for y_label in y_labels:
             if x_label == y_label: continue
@@ -182,7 +188,7 @@ def contour_plots(df_all):
             #plt.scatter(x, y)
             plt.xlabel(x_label)
             plt.ylabel(y_label)
-            plt.savefig(f'{path}/analysis/basic_plots/heatmaps/contour_{x_label}_{y_label}.png', bbox_inches='tight')
+            plt.savefig(f'{path}/analysis/{plot_dir}/heatmaps/contour_{x_label}_{y_label}.png', bbox_inches='tight')
             plt.clf()
             plt.close()
 
@@ -208,12 +214,13 @@ def contour_plots(df_all):
             #plt.scatter(x, y)
             plt.xlabel(x_label)
             plt.ylabel(y_label)
-            plt.savefig(f'{path}/analysis/basic_plots/heatmaps/contour_last10_{x_label}_{y_label}.png', bbox_inches='tight')
+            plt.savefig(f'{path}/analysis/{plot_dir}/heatmaps/contour_last10_{x_label}_{y_label}.png', bbox_inches='tight')
             plt.clf()
             plt.close()
     
 def plot_boxes(df_inner):
     print('plotting boxes...')
+    print(f'\toutput at {path}/analysis/{plot_dir}')
 
     for gen_boxes in gens_boxes:
         df_inner2 = df_inner[(df_inner['generation_index'] == gen_boxes) & (df_inner['run'] <= max(runs))]
@@ -232,11 +239,17 @@ def plot_boxes(df_inner):
 
             try:
                 if len(tests_combinations) > 0:
-                    add_stat_annotation(plot, data=df_inner2, x='experiment', y=f'{measure}_{inner_metrics[0]}',
-                                        box_pairs=tests_combinations,
-                                        comparisons_correction=None,
-                                        test='Wilcoxon', text_format='star', fontsize='xx-large', loc='inside',
-                                        verbose=1)
+                    annotator = Annotator(ax=plot, pairs=tests_combinations, data=df_inner2, x='experiment', y=f'{measure}_{inner_metrics[0]}',
+                                          comparisons_correction=None, verbose=1, hide_non_significant=True)
+                    annotator.configure(test='Wilcoxon', text_format='star', loc='inside')
+                    annotator.apply_and_annotate()
+
+                    #HP: original one below, also shows NS
+                    #add_stat_annotation(plot, data=df_inner2, x='experiment', y=f'{measure}_{inner_metrics[0]}',
+                    #                    box_pairs=tests_combinations,
+                    #                    comparisons_correction=None,
+                    #                    test='Wilcoxon', text_format='star', fontsize='xx-large', loc='inside',
+                    #                    verbose=1)
             except Exception as error:
                 print(error)
 

@@ -16,6 +16,8 @@ mainpath="$(python3 experiments/default_study/get_param.py --get_default mainpat
 study="$(python3 experiments/default_study/get_param.py --get_default study_name)"
 output_path="$(python3 experiments/default_study/get_param.py --get_default output_path)"
 
+#experiments="flat,icy,rugged,sine,slope,step"    #HP: optional manual experiment selection (no build required)
+
 echo "[generating best snapshots...]"
 python3 experiments/${study}/snapshots_bests.py $study $experiments $runs $generations $output_path;
 
@@ -25,11 +27,12 @@ python3 experiments/${study}/bests_snap_2d.py $study $experiments $runs $generat
 echo "[running consolidate.py...]"
 python3 experiments/${study}/consolidate.py $study $experiments $runs $final_gen $output_path;
 
-echo "[plotting static plots...]"
-python3 experiments/${study}/plot_static.py $study $experiments $runs $generations $output_path false;  #without max
-python3 experiments/${study}/plot_static.py $study $experiments $runs $generations $output_path true;   #with max
+echo -e "\n[plotting static plots (no max)...]"
+python3 experiments/${study}/plot_static.py $study $experiments $runs $generations $output_path 0;  #without max
+echo -e "\n[plotting static plots (max)...]"
+python3 experiments/${study}/plot_static.py $study $experiments $runs $generations $output_path 1;   #with max
 
 echo "[making video recording...]"
-#./experiments/${study}/makevideos.sh
+./experiments/${study}/makevideos.sh
 
 echo "[DONE ANALYSING!]"
